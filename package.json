@@ -1,0 +1,20 @@
+{
+  "name": "questionsandanswers",
+  "version": "1.0.0",
+  "description": "QnA SDC",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test",
+    "start": "nodemon server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TeamDingo/QuestionsAndAnswers.git"
+  },
+  "author": "Ben Kern",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TeamDingo/QuestionsAndAnswers/issues"
+  },
+  "homepage": "https://github.com/TeamDingo/QuestionsAndAnswers#readme"
+}
