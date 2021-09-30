@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npm test",
-    "start": "nodemon server/server.js"
+    "start": "npx nodemon server/index.js"
   },
   "repository": {
     "type": "git",

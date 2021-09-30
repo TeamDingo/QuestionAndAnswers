@@ -13,9 +13,9 @@ CREATE TABLE questions (
   epoch BIGINT,
   asker_name VARCHAR(60) NOT NULL,
   asker_email VARCHAR(60) NOT NULL,
-  reported BOOLEAN,
-  helpful INT,
-  date_written TIMESTAMP NULL DEFAULT NULL
+  reported BOOLEAN DEFAULT false,
+  helpful INT DEFAULT 0,
+  date_written TIMESTAMP NULL DEFAULT NOW()
 );
 
 CREATE TABLE answers (
@@ -25,9 +25,9 @@ CREATE TABLE answers (
   epoch BIGINT,
   answerer_name VARCHAR(60) NOT NULL,
   answerer_email VARCHAR(60) NOT NULL,
-  reported BOOLEAN,
-  helpful INT,
-  date_written TIMESTAMP NULL DEFAULT NULL,
+  reported BOOLEAN DEFAULT false,
+  helpful INT DEFAULT 0,
+  date_written TIMESTAMP NULL DEFAULT NOW(),
   FOREIGN KEY(question_id)
     REFERENCES questions(id),
 );
