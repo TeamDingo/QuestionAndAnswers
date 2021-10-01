@@ -24,7 +24,7 @@ const getQuestions = async productId => {
 const getAnswers = async questionId => {
   try {
     const answers = await pool.query(
-      'SELECT * FROM answers WHERE question_id = $1',
+      'SELECT a.answer_id, a.question_id, a.body,a.answerer_name, a.helpfulness, a.date, ARRAY_AGG (p.url) photos FROM answers a INNER JOIN photos p ON a.answer_id = p.answer_id WHERE question_id = $1 GROUP BY a.answer_id',
       [questionId]
     );
     return answers.rows;
@@ -54,7 +54,7 @@ const writeAnswer = async (questionId, body, name, email, photos) => {
     const newPhotos = [];
     if (photos) {
       for (const photo of photos) {
-        const newPhoto= await pool.query(
+        const newPhoto = await pool.query(
           'INSERT INTO photos (answer_id, url) VALUES ($1, $2) RETURNING *',
           [newAnswer.rows[0].id, photo]
         );
@@ -67,9 +67,49 @@ const writeAnswer = async (questionId, body, name, email, photos) => {
   }
 };
 
+const markQuestionHelpful = async (questionId) => {
+  try {
+    const updatedQuestion = await pool.query('UPDATE questions SET question_helpfulness = question_helpfulness + 1 WHERE question_id = $1 RETURNING *', [questionId]);
+    return updatedQuestion.rows[0];
+  } catch (err) {
+    return err.stack;
+  }
+}
+
+const reportQuestion = async (questionId) => {
+  try {
+    const reportedQuestion = await pool.query('UPDATE questions SET reported = NOT reported WHERE question_id = $1 RETURNING *', [questionId]);
+    return reportedQuestion.rows[0];
+  } catch (err) {
+    return err.stack;
+  }
+}
+
+const markAnswerHelpful = async (answerId) => {
+  try {
+    const updatedAnswer = await pool.query('UPDATE answers SET helpfulness = helpfulness + 1 WHERE answer_id = $1 RETURNING *', [answerId]);
+    return updatedAnswer.rows[0];
+  } catch (err) {
+    return err.stack;
+  }
+}
+
+const reportAnswer = async (answerId) => {
+  try {
+    const reportedAnswer = await pool.query('UPDATE answers SET reported = NOT reported WHERE answer_id = $1 RETURNING *', [answerId]);
+    return reportedAnswer.rows[0];
+  } catch (err) {
+    return err.stack;
+  }
+}
+
 module.exports = {
   getQuestions,
   getAnswers,
   writeQuestion,
-  writeAnswer
+  writeAnswer,
+  markQuestionHelpful,
+  reportQuestion,
+  markAnswerHelpful,
+  reportAnswer
 };

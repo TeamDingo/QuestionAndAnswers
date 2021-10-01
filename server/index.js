@@ -31,20 +31,24 @@ app.post('/qa/:questionId/answers', async (req, res) => {
   res.send(newAnswerData);
 });
 
-app.put('/qa/question/:questionId/helpful', (req, res) => {
-
+app.put('/qa/question/:questionId/helpful', async (req, res) => {
+  const updatedQuestionData = await db.markQuestionHelpful(req.params.questionId);
+  res.send(updatedQuestionData);
 });
 
-app.put('/qa/question/:questionId/report', (req, res) => {
-
+app.put('/qa/question/:questionId/report', async (req, res) => {
+  const reportedQuestionData = await db.reportQuestion(req.params.questionId);
+  res.send(reportedQuestionData);
 });
 
-app.put('/qa/answer/:answerId/helpful', (req, res) => {
-
+app.put('/qa/answer/:answerId/helpful', async (req, res) => {
+  const updatedAnswerData = await db.markAnswerHelpful(req.params.answerId);
+  res.send(updatedAnswerData);
 });
 
-app.put('/qa/answer/:answerId/report', (req, res) => {
-
+app.put('/qa/answer/:answerId/report', async (req, res) => {
+  const reportedAnswerData = await db.reportAnswer(req.params.answerId);
+  res.send(reportedAnswerData);
 });
 
 
