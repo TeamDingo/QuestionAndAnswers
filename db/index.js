@@ -44,7 +44,6 @@ const writeQuestion = async (productId, body, name, email) => {
     return err.stack;
   }
 };
-
 const writeAnswer = async (questionId, body, name, email, photos) => {
   try {
     const newAnswer = await pool.query(
