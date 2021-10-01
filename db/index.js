@@ -24,7 +24,7 @@ const getQuestions = async productId => {
 const getAnswers = async questionId => {
   try {
     const answers = await pool.query(
-      'SELECT a.answer_id, a.question_id, a.body,a.answerer_name, a.helpfulness, a.date, ARRAY_AGG (p.url) photos FROM answers a INNER JOIN photos p ON a.answer_id = p.answer_id WHERE question_id = $1 GROUP BY a.answer_id',
+      'SELECT a.answer_id, a.question_id, a.body,a.answerer_name, a.helpfulness, a.date, ARRAY_AGG (p.url) photos FROM answers a LEFT OUTER JOIN photos p ON a.answer_id = p.answer_id WHERE question_id = $1 GROUP BY a.answer_id',
       [questionId]
     );
     return answers.rows;
@@ -36,7 +36,7 @@ const getAnswers = async questionId => {
 const writeQuestion = async (productId, body, name, email) => {
   try {
     const newQuestion = await pool.query(
-      'INSERT INTO questions (product_id, body, asker_name, asker_email) VALUES ($1, $2, $3, $4) RETURNING *',
+      'INSERT INTO questions (product_id, question_body, asker_name, asker_email) VALUES ($1, $2, $3, $4) RETURNING *',
       [productId, body, name, email]
     );
     return newQuestion.rows[0];
