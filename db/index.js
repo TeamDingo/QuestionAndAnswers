@@ -28,6 +28,7 @@ const writeQuestion = (productId, body, name, email) => {
     [productId, body, name, email]
   );
 };
+
 const writeAnswer = async (questionId, body, name, email, photos) => {
   const newAnswer = await pool.query(
     'INSERT INTO answers (question_id, body, answerer_name, answerer_email) VALUES ($1, $2, $3, $4) RETURNING *',
