@@ -10,14 +10,14 @@ pool
   .catch(() => console.log('Error connecting to database'));
 
 const getQuestions = productId => {
-  return pool.query('SELECT * FROM questions WHERE product_id = $1', [
+  return pool.query('SELECT * FROM questions WHERE product_id = $1 AND reported = false', [
     productId
   ]);
 };
 
 const getAnswers = questionId => {
   return pool.query(
-    'SELECT a.answer_id, a.question_id, a.body,a.answerer_name, a.helpfulness, a.date, ARRAY_AGG (p.url) photos FROM answers a LEFT OUTER JOIN photos p ON a.answer_id = p.answer_id WHERE question_id = $1 GROUP BY a.answer_id',
+    'SELECT a.answer_id, a.question_id, a.body,a.answerer_name, a.helpfulness, a.date, ARRAY_AGG (p.url) photos FROM answers a LEFT OUTER JOIN photos p ON a.answer_id = p.answer_id WHERE question_id = $1 AND reported = false GROUP BY a.answer_id',
     [questionId]
   );
 };
