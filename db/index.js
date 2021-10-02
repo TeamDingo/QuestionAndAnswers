@@ -10,9 +10,10 @@ pool
   .catch(() => console.log('Error connecting to database'));
 
 const getQuestions = productId => {
-  return pool.query('SELECT * FROM questions WHERE product_id = $1 AND reported = false', [
-    productId
-  ]);
+  return pool.query(
+    'SELECT * FROM questions WHERE product_id = $1 AND reported = false',
+    [productId]
+  );
 };
 
 const getAnswers = questionId => {
@@ -76,6 +77,7 @@ const reportAnswer = answerId => {
 };
 
 module.exports = {
+  pool,
   getQuestions,
   getAnswers,
   writeQuestion,
