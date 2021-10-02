@@ -65,6 +65,7 @@ app.post('/qa/:questionId/answers', async (req, res) => {
   }
 });
 
+// Increment question helpfulness
 app.put('/qa/question/:questionId/helpful', async (req, res) => {
   try {
     const updatedQuestion = await db.markQuestionHelpful(req.params.questionId);
@@ -75,6 +76,7 @@ app.put('/qa/question/:questionId/helpful', async (req, res) => {
   }
 });
 
+// Report a question
 app.put('/qa/question/:questionId/report', async (req, res) => {
   try {
     const reportedQuestion = await db.reportQuestion(req.params.questionId);
@@ -85,6 +87,7 @@ app.put('/qa/question/:questionId/report', async (req, res) => {
   }
 });
 
+// Increment answer helpfulness
 app.put('/qa/answer/:answerId/helpful', async (req, res) => {
   try {
     const updatedAnswer = await db.markAnswerHelpful(req.params.answerId);
@@ -95,6 +98,7 @@ app.put('/qa/answer/:answerId/helpful', async (req, res) => {
   }
 });
 
+// Report an answer
 app.put('/qa/answer/:answerId/report', async (req, res) => {
   try {
     const reportedAnswer = await db.reportAnswer(req.params.answerId);
