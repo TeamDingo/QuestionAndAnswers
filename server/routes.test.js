@@ -5,9 +5,9 @@ const request = require('supertest');
 const validProductId = 38322;
 const invalidProductId = 3832200000;
 
-beforeAll((done) => {
-  done();
-})
+// beforeAll((done) => {
+//   done();
+// })
 
 describe('GET questions', () => {
   describe('given an existing product id', () => {
@@ -29,7 +29,7 @@ describe('GET questions', () => {
   });
 });
 
-afterAll((done) => {
-  pool.end();
-  done();
-})
+// afterAll((done) => {
+//   pool.end();
+//   done();
+// })

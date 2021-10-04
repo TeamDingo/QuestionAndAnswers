@@ -15,7 +15,7 @@ app.get('/qa/:productId', async (req, res) => {
     const questions = await db.getQuestions(req.params.productId);
     res.send(questions.rows);
   } catch (err) {
-    console.log(err.stack);
+    console.log('error getting questions');
     res.status(404).send();
   }
 });
@@ -26,7 +26,7 @@ app.get('/qa/:questionId/answers', async (req, res) => {
     const answers = await db.getAnswers(req.params.questionId);
     res.send(answers.rows);
   } catch (err) {
-    console.log(err.stack);
+    console.log('error getting answers');
     res.status(404).send();
   }
 });
@@ -42,7 +42,7 @@ app.post('/qa/:productId', async (req, res) => {
     );
     res.send(newQuestion.rows[0]);
   } catch (err) {
-    console.log(err.stack);
+    console.log('error posting question');
     res.status(400).send();
   }
 });
@@ -59,7 +59,7 @@ app.post('/qa/:questionId/answers', async (req, res) => {
     );
     res.send(newAnswerData);
   } catch (err) {
-    console.log(err.stack);
+    console.log('error posting answer');
     res.status(400).send();
   }
 });
