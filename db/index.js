@@ -55,7 +55,7 @@ const markQuestionHelpful = questionId => {
 
 const reportQuestion = questionId => {
   return pool.query(
-    'UPDATE questions SET reported = NOT reported WHERE question_id = $1 RETURNING *',
+    'UPDATE questions SET reported = true WHERE question_id = $1 RETURNING *',
     [questionId]
   );
 };
@@ -69,7 +69,7 @@ const markAnswerHelpful = answerId => {
 
 const reportAnswer = answerId => {
   return pool.query(
-    'UPDATE answers SET reported = NOT reported WHERE answer_id = $1 RETURNING *',
+    'UPDATE answers SET reported = true WHERE answer_id = $1 RETURNING *',
     [answerId]
   );
 };

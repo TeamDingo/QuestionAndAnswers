@@ -1,8 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const db = require('../db');
+const redis = require('redis');
 
 const app = express();
+const client = redis.createClient();
+
+client.on('connect', () => {
+  console.log('Connected to cache');
+});
 
 app.use(cors());
 
@@ -12,8 +18,26 @@ app.use(express.urlencoded({ extended: true }));
 // Retrieves all questions for a product
 app.get('/qa/:productId', async (req, res) => {
   try {
-    const questions = await db.getQuestions(req.params.productId);
-    res.send(questions.rows);
+    client.get(`questions:${req.params.productId}`, async (err, data) => {
+      if (err) {
+        console.log(err);
+      }
+
+      if (data) {
+        console.log('questions retrieved from cache');
+        res.send(JSON.parse(data));
+      } else {
+        console.log('questions retrieved from db');
+        const questions = await db.getQuestions(req.params.productId);
+        client.set(
+          `questions:${req.params.productId}`,
+          JSON.stringify(questions.rows),
+          'EX',
+          86400
+        );
+        res.send(questions.rows);
+      }
+    });
   } catch (err) {
     console.log('error getting questions');
     res.status(404).send();
@@ -23,8 +47,26 @@ app.get('/qa/:productId', async (req, res) => {
 // Retrieves all answers for a question
 app.get('/qa/:questionId/answers', async (req, res) => {
   try {
-    const answers = await db.getAnswers(req.params.questionId);
-    res.send(answers.rows);
+    client.get(`answers:${req.params.questionId}`, async (err, data) => {
+      if (err) {
+        console.log(err);
+      }
+
+      if (data) {
+        console.log('answers retrieved from cache');
+        res.send(JSON.parse(data));
+      } else {
+        console.log('answers retrieved from db');
+        const answers = await db.getAnswers(req.params.questionId);
+        client.set(
+          `answers:${req.params.questionId}`,
+          JSON.stringify(answers.rows),
+          'EX',
+          86400
+        );
+        res.send(answers.rows);
+      }
+    });
   } catch (err) {
     console.log('error getting answers');
     res.status(404).send();
@@ -40,6 +82,18 @@ app.post('/qa/:productId', async (req, res) => {
       req.body.name,
       req.body.email
     );
+    client.get(`questions:${req.params.productId}`, (err, data) => {
+      if (data) {
+        const oldQuestions = JSON.parse(data);
+        const updatedQuestions = [...oldQuestions, newQuestion.rows[0]];
+        client.set(
+          `questions:${req.params.productId}`,
+          JSON.stringify(updatedQuestions),
+          'EX',
+          86400
+        );
+      }
+    });
     res.send(newQuestion.rows[0]);
   } catch (err) {
     console.log('error posting question');
@@ -57,6 +111,18 @@ app.post('/qa/:questionId/answers', async (req, res) => {
       req.body.email,
       req.body.photos
     );
+    client.get(`answers:${req.params.questionId}`, (err, data) => {
+      if (data) {
+        const oldAnswers = JSON.parse(data);
+        const updatedAnswers = [...oldAnswers, newAnswerData];
+        client.set(
+          `answers:${req.params.questionId}`,
+          JSON.stringify(updatedAnswers),
+          'EX',
+          86400
+        );
+      }
+    });
     res.send(newAnswerData);
   } catch (err) {
     console.log('error posting answer');
