@@ -2,9 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const db = require('../db');
 const redis = require('redis');
+const { redisConfig } = require('../config.js');
 
 const app = express();
-const client = redis.createClient();
+const client = redis.createClient(redisConfig);
 
 client.on('connect', () => {
   console.log('Connected to cache');
