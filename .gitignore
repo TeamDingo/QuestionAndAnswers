@@ -109,3 +109,5 @@ newrelic.js
 config.js
 
 pgdata/
+
+docker-compose.yml
