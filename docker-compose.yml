@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    networks:
+      - webnet
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: "benkern"
+      POSTGRES_PASSWORD: "LnOtGy2()17"
+      POSTGRES_DB: qna
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    networks:
+      - webnet
+  web:
+    image: bkern98/sdc-server:1
+    depends_on:
+      - db
+      - redis
+    ports:
+      - 3000:3000
+    networks:
+      - webnet
+    environment:
+      DB_HOST: db
+      REDIS_HOST: redis
+volumes:
+  pgdata:
+networks:
+  webnet:

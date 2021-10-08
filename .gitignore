@@ -107,3 +107,5 @@ schema.sql
 get-qnas.yml
 newrelic.js
 config.js
+
+pgdata/
