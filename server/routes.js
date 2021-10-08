@@ -4,7 +4,9 @@ const db = require('../db');
 const redis = require('redis');
 
 const app = express();
-const client = redis.createClient();
+const client = redis.createClient({
+  host: process.env.REDIS_HOST || '127.0.0.1'
+});
 
 client.on('connect', () => {
   console.log('Connected to cache');
